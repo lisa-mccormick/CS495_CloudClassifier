@@ -20,8 +20,11 @@ testImages = imageDatastore(...
 % The following will perform a series of augmentations on the training set
 % of images, overall providing triple the amount of training data.
 
-reflectedImages = yReflect(trainImages);
-noisyImages = noise(trainImages);
+% Mirror all images along the y-axis
+reflectedImages = transform(trainImages, @(x) flip(x,2));
+
+% Add a salt & pepper filter to all images
+noisyImages = transform(trainImages, @(x) imnoise(x, 'salt & pepper'));
 
 trainImages = combine(trainImages, reflectedImages, noisyImages);
 
