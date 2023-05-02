@@ -3,7 +3,7 @@ rootDir = '/MATLAB Drive/CS495_CloudClassifier/';
 trainDir = [rootDir 'train'];
 validateDir = [rootDir 'val'];
 testDir = [rootDir 'test'];
-trainImages = imageDatastore(...
+trainingImages = imageDatastore(...
    trainDir, ...
    'IncludeSubfolders',true, ...
    'LabelSource', 'foldernames');
@@ -21,12 +21,12 @@ testImages = imageDatastore(...
 % of images, overall providing triple the amount of training data.
 
 % Mirror all images along the y-axis
-reflectedImages = transform(trainImages, @(x) flip(x,2));
+reflectedImages = transform(trainingImages, @(x) flip(x,2));
 
 % Add a salt & pepper filter to all images
-noisyImages = transform(trainImages, @(x) imnoise(x, 'salt & pepper'));
+noisyImages = transform(trainingImages, @(x) imnoise(x, 'salt & pepper'));
 
-trainImages = combine(trainImages, reflectedImages, noisyImages);
+trainImages = combine(trainingImages, reflectedImages, noisyImages);
 
 %% Initializing network
 net = alexnet;
