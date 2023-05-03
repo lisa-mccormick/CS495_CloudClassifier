@@ -16,17 +16,42 @@ testImages = imageDatastore(...
    'IncludeSubfolders',true, ...
    'LabelSource', 'foldernames');
 
-%% Image augmentation datastores
+%% Image augmentation
 % The following will perform a series of augmentations on the training set
-% of images, overall providing triple the amount of training data.
 
 % Mirror all images along the y-axis
-reflectedImages = transform(trainingImages, @(x) flip(x,2));
+if not(isfolder('reflectedImages/'))
+    reflectedImages = transform(trainingImages, @flipImage, 'IncludeInfo', true);
+    location = '/MATLAB Drive/CS495_CloudClassifier/reflectedImages/';
+    writeall(reflectedImages, location, 'OutputFormat','jpg', 'FilenamePrefix','reflect_');
+end
 
 % Add a salt & pepper filter to all images
-noisyImages = transform(trainingImages, @(x) imnoise(x, 'salt & pepper'));
+if not(isfolder('saltPepperImages/'))
+    saltPepperImages = transform(trainingImages, @saltpepperImage, 'IncludeInfo', true);
+    location = '/MATLAB Drive/CS495_CloudClassifier/saltPepperImages/';
+    writeall(saltPepperImages, location, 'OutputFormat','jpg', 'FilenamePrefix','saltPepper_');
+end
 
-trainImages = combine(trainingImages, reflectedImages, noisyImages);
+% Add a gaussian filter to all images
+if not(isfolder('gaussianImages/'))
+    gaussianImages = transform(trainingImages, @gaussianImage, 'IncludeInfo', true);
+    location = '/MATLAB Drive/CS495_CloudClassifier/gaussianImages/';
+    writeall(gaussianImages, location, 'OutputFormat','jpg', 'FilenamePrefix','gaussian_');
+end
+
+% Creating image datastore
+trainImages =  imageDatastore(...
+   {'/MATLAB Drive/CS495_CloudClassifier/train/', ...
+   '/MATLAB Drive/CS495_CloudClassifier/reflectedImages/train', ...
+   '/MATLAB Drive/CS495_CloudClassifier/saltPepperImages/train', ...
+   '/MATLAB Drive/CS495_CloudClassifier/gaussianImages/train'}, ...
+   'IncludeSubfolders',true, ...
+   'LabelSource', 'foldernames');
+
+% Use this to previw the augmentations before proceeding to the CNN
+% imshow(imtile(preview(trainImages)))
+
 
 %% Initializing network
 net = alexnet;
