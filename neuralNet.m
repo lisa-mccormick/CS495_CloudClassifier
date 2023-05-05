@@ -40,17 +40,32 @@ if not(isfolder('gaussianImages/'))
     writeall(gaussianImages, location, 'OutputFormat','jpg', 'FilenamePrefix','gaussian_');
 end
 
-% Creating image datastore
+% Add a random block to all images
+if not(isfolder('blockedImages/'))
+    blockedImages = transform(trainingImages, @blockImage, 'IncludeInfo', true);
+    location = '/MATLAB Drive/CS495_CloudClassifier/blockedImages/';
+    writeall(blockedImages, location, 'OutputFormat','jpg', 'FilenamePrefix','gaussian_');
+end
+
+% Paths for each set of image files for final training datastore
+origTrainingImages = '/MATLAB Drive/CS495_CloudClassifier/train/';
+reflectedImages = '/MATLAB Drive/CS495_CloudClassifier/reflectedImages/train';
+saltPepperImages = '/MATLAB Drive/CS495_CloudClassifier/saltPepperImages/train';
+gaussianImages = '/MATLAB Drive/CS495_CloudClassifier/gaussianImages/train';
+blockedImages = '/MATLAB Drive/CS495_CloudClassifier/blockedImages/train';
+
+% Creating total image datastore
 trainImages =  imageDatastore(...
-   {'/MATLAB Drive/CS495_CloudClassifier/train/', ...
-   '/MATLAB Drive/CS495_CloudClassifier/reflectedImages/train', ...
-   '/MATLAB Drive/CS495_CloudClassifier/saltPepperImages/train', ...
-   '/MATLAB Drive/CS495_CloudClassifier/gaussianImages/train'}, ...
+   {origTrainingImages, ...
+   reflectedImages, ...
+   saltPepperImages, ...
+   gaussianImages, ...
+   blockedImages}, ...
    'IncludeSubfolders',true, ...
    'LabelSource', 'foldernames');
 
 % Use this to previw the augmentations before proceeding to the CNN
-% imshow(imtile(preview(trainImages)))
+imshow(imtile(preview(trainImages)))
 
 
 %% Initializing network

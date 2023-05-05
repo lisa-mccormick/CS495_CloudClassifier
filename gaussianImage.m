@@ -1,6 +1,6 @@
 function [output, info] = gaussianImage(img, information)
 
-        output = imnoise(img, 'gaussian');
+    output = imnoise(img, 'gaussian');
 
-        info = information;
+    info = information;
 end

@@ -1,6 +1,6 @@
 function [output, info] = flipImage(img, information)
 
-        output = flip(img, 2);
+    output = flip(img, 2);
 
-        info = information;
+    info = information;
 end
