@@ -44,15 +44,15 @@ end
 if not(isfolder('blockedImages/'))
     blockedImages = transform(trainingImages, @blockImage, 'IncludeInfo', true);
     location = '/MATLAB Drive/CS495_CloudClassifier/blockedImages/';
-    writeall(blockedImages, location, 'OutputFormat','jpg', 'FilenamePrefix','gaussian_');
+    writeall(blockedImages, location, 'OutputFormat','jpg', 'FilenamePrefix','block_');
 end
 
 % Paths for each set of image files for final training datastore
 origTrainingImages = '/MATLAB Drive/CS495_CloudClassifier/train/';
-reflectedImages = '/MATLAB Drive/CS495_CloudClassifier/reflectedImages/train';
-saltPepperImages = '/MATLAB Drive/CS495_CloudClassifier/saltPepperImages/train';
-gaussianImages = '/MATLAB Drive/CS495_CloudClassifier/gaussianImages/train';
-blockedImages = '/MATLAB Drive/CS495_CloudClassifier/blockedImages/train';
+reflectedImages = '/MATLAB Drive/CS495_CloudClassifier/reflectedImages/train/';
+saltPepperImages = '/MATLAB Drive/CS495_CloudClassifier/saltPepperImages/train/';
+gaussianImages = '/MATLAB Drive/CS495_CloudClassifier/gaussianImages/train/';
+blockedImages = '/MATLAB Drive/CS495_CloudClassifier/blockedImages/train/';
 
 % Creating total image datastore
 trainImages =  imageDatastore(...
@@ -65,8 +65,7 @@ trainImages =  imageDatastore(...
    'LabelSource', 'foldernames');
 
 % Use this to previw the augmentations before proceeding to the CNN
-imshow(imtile(preview(trainImages)))
-
+% imshow(imtile(preview(trainImages)))
 
 %% Initializing network
 net = alexnet;
