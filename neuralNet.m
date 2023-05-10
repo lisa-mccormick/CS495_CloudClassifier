@@ -33,11 +33,11 @@ if not(isfolder('saltPepperImages/'))
     writeall(saltPepperImages, location, 'OutputFormat','jpg', 'FilenamePrefix','saltPepper_');
 end
 
-% Add a gaussian filter to all images
-if not(isfolder('gaussianImages/'))
-    gaussianImages = transform(trainingImages, @gaussianImage, 'IncludeInfo', true);
-    location = '/MATLAB Drive/CS495_CloudClassifier/gaussianImages/';
-    writeall(gaussianImages, location, 'OutputFormat','jpg', 'FilenamePrefix','gaussian_');
+% Add a gaussian blur to all images
+if not(isfolder('gaussBlurImages/'))
+    gaussBlurImages = transform(trainingImages, @gaussBlurImage, 'IncludeInfo', true);
+    location = '/MATLAB Drive/CS495_CloudClassifier/gaussBlurImages/';
+    writeall(gaussBlurImages, location, 'OutputFormat','jpg', 'FilenamePrefix','gaussBlur_');
 end
 
 % Add a random block to all images
@@ -51,18 +51,23 @@ end
 origTrainingImages = '/MATLAB Drive/CS495_CloudClassifier/train/';
 reflectedImages = '/MATLAB Drive/CS495_CloudClassifier/reflectedImages/train/';
 saltPepperImages = '/MATLAB Drive/CS495_CloudClassifier/saltPepperImages/train/';
-gaussianImages = '/MATLAB Drive/CS495_CloudClassifier/gaussianImages/train/';
+gaussBlurImages = '/MATLAB Drive/CS495_CloudClassifier/gaussBlurImages/train/';
 blockedImages = '/MATLAB Drive/CS495_CloudClassifier/blockedImages/train/';
 
 % Storing all the images into a single array, remove or add groups as
 % neccessary for training purposes
 imageSet = {
     origTrainingImages, ...
-    reflectedImages, ...
-    saltPepperImages, ...
-    gaussianImages, ...
-    blockedImages
+    saltPepperImages
    };
+
+% imageSet = {
+%     origTrainingImages, ...
+%     reflectedImages, ...
+%     saltPepperImages, ...
+%     gaussianImages, ...
+%     blockedImages
+%    };
 
 % Creating total image datastore
 trainImages =  imageDatastore(...
@@ -88,14 +93,14 @@ augTrain = augmentedImageDatastore(imageSize,trainImages);
 augVal = augmentedImageDatastore(imageSize,validateImages);
 options = trainingOptions('sgdm', ...
    'MiniBatchSize',32, ...
-   'MaxEpochs',8, ...
+   'MaxEpochs',4, ...
    'InitialLearnRate',1e-4, ...
    'Shuffle','every-epoch', ...
    'ValidationData',augVal, ...
    'ValidationFrequency',3, ...
    'Verbose',false, ...
    'Plots','training-progress');
-netTransfer = trainNetwork(augTrain,layers,options);
+netTransfer = trainNetwork(augTrain, layers, options);
 trainedNet = netTransfer;
 save trainedNet
 
