@@ -1,11 +1,6 @@
 function results = compareResults(img)
 
     load final_trainedNet.mat
-    
-    img = imageDatastore(...
-        img, ...
-       'IncludeSubfolders',true, ...
-       'LabelSource', 'foldernames');
 
     augTest = augmentedImageDatastore(imageSize, img);
 
@@ -17,8 +12,8 @@ function results = compareResults(img)
     
     results = table('Size',sz,'VariableTypes',varTypes,'VariableNames',varNames);
     results(:,"Detected Class") = array2table(detectedClasses);
-    results(:,"Actual Class") = array2table(img);
-    results(:,"Match?") = array2table(categorical(detectedClasses == img));
+    results(:,"Actual Class") = array2table(img.Labels);
+    results(:,"Match?") = array2table(categorical(detectedClasses == img.Labels));
     results(:,"Distance") = array2table(scores(:,2));
     results(:,"Datastore Index") = array2table((1:sz(1))');
 end
